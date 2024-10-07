@@ -49,7 +49,7 @@ pip install pyautogui colorama
 
 ## Run the script:
 ```bash
-pip piano.py
+python piano.py
 ```
 
 ## Adding a song:
