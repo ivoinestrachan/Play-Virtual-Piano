@@ -9,7 +9,7 @@ This project allows you to automate playing songs on a virtual piano using Pytho
   - [Table of Contents](#table-of-contents)
   - [Features](#features)
   - [Requirements](#requirements)
-  - [Installation](#installation)
+  - [Installation \& Download](#installation--download)
   - [Finding Sheets](#finding-sheets)
   - [Run the script:](#run-the-script)
   - [Adding a song:](#adding-a-song)
@@ -30,12 +30,19 @@ This project allows you to automate playing songs on a virtual piano using Pytho
 - **pyautogui library**
 - **colorama library**
 
-## Installation
-You can install the required libraries using:
+## Installation & Download
+Clone or Download Repo
+```bash
+git clone https://github.com/ivoinestrachan/Play-Virtual-Piano
+```
+```bash
+cd Play-Virtual-Piano
+```
 
 ## Finding Sheets
 [Virtual piano Sheet](https://virtualpiano.net/music-sheets/)
 
+You can install the required libraries using:
 ```bash
 pip install pyautogui colorama
 ```
