@@ -44,6 +44,11 @@ cd Play-Virtual-Piano
 
 You can install the required libraries using:
 ```bash
+pip install -r requirements.txt
+```
+
+Or install individually:
+```bash
 pip install pyautogui colorama
 ```
 

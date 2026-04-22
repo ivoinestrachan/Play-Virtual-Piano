@@ -4,7 +4,11 @@ import random
 import json
 from colorama import Fore, Style, init
 
-init()
+init(autoreset=True)
+
+# Enable pyautogui failsafe (move mouse to corner to stop)
+pyautogui.FAILSAFE = True
+pyautogui.PAUSE = 0.01  # Minimum pause between pyautogui calls
 
 colors = [Fore.RED, Fore.GREEN, Fore.YELLOW,
           Fore.BLUE, Fore.MAGENTA, Fore.CYAN, Fore.WHITE]
@@ -30,7 +34,10 @@ def colorize(note):
 def play_chord(notes):
     colored_notes = "".join([colorize(note) for note in notes])
     print(f"playing chord: {colored_notes}")
-    pyautogui.hotkey(*notes)
+    try:
+        pyautogui.hotkey(*notes)
+    except Exception as e:
+        print(f"Error playing chord: {e}")
 
 
 def type_sequence(sequence, song_name, delay=0.15):
@@ -40,18 +47,25 @@ def type_sequence(sequence, song_name, delay=0.15):
     speed_factor = 0.04 if song_name in fast_songs else delay
 
     for part in sequence:
-        if part.isalnum():
-            for char in part:
-                print(f"Typing: {colorize(char)}")
-                pyautogui.press(char)
-                time.sleep(speed_factor)
-        elif "[" in part and "]" in part:
-            chord = part.replace("[", "").replace("]", "")
+        if "[" in part and "]" in part:
+            # Handle chord
+            chord = part.strip("[]")
             play_chord(list(chord))
+            time.sleep(speed_factor)
         elif '|' in part:
+            # Handle rest
             print("Rest...")
-            time.sleep(speed_factor * 3)
-        time.sleep(speed_factor)
+            time.sleep(speed_factor * 2)
+        else:
+            # Handle individual notes
+            for char in part:
+                if char.strip():  # Skip whitespace
+                    print(f"Typing: {colorize(char)}")
+                    try:
+                        pyautogui.press(char)
+                    except Exception as e:
+                        print(f"Error pressing key '{char}': {e}")
+                    time.sleep(speed_factor)
 
 
 def play_song(songs, song_name):
@@ -60,10 +74,14 @@ def play_song(songs, song_name):
         return
 
     print(f"\nNow playing: {song_name}\n")
-    for seq in songs[song_name]:
-        print(f"processing sequence: {seq}")
-        type_sequence(seq.split(), song_name, delay=0.15)
-        time.sleep(0.3)
+    try:
+        for seq in songs[song_name]:
+            print(f"processing sequence: {seq}")
+            type_sequence(seq.split(), song_name, delay=0.15)
+            time.sleep(0.2)  # Reduced from 0.3 for less lag between sequences
+    except KeyboardInterrupt:
+        print("\n\nPlayback stopped by user!")
+        return
 
 
 def song_selector(songs):
